@@ -15,6 +15,7 @@
             --active-item: #3498db;
             --answered: #27ae60;
             --doubt: #f39c12;
+            --accent-color: #e74c3c;
         }
         
         body { margin: 0; font-family: sans-serif; background: #ecf0f1; height: 100vh; display: flex; flex-direction: column; }
@@ -172,8 +173,16 @@
         .btn-next:hover { background: #1f70a9; }
         .btn-ragu { background: var(--doubt); color: white; }
         .btn-ragu:hover { background: #e67e22; }
-        .btn-selesai { background: var(--accent-color); color: white; }
+        
+        /* --- PERBAIKAN TOMBOL SELESAI --- */
+        .btn-selesai { 
+            background: var(--accent-color); 
+            color: white;
+            opacity: 1 !important; /* Pastikan selalu terlihat */
+            visibility: visible !important; /* Pastikan selalu visible */
+        }
         .btn-selesai:hover { background: #c0392b; }
+        
         .btn-disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* Loading Screen */
@@ -379,7 +388,8 @@
             }
 
             // --- 4. FUNGSI TIMER ---
-            let totalSeconds = 3600; // 60 menit * 60 detik = 3600 detik (1 jam)
+            const totalWaktuUjianMenit = 60; // Set 60 Menit
+            let totalSeconds = totalWaktuUjianMenit * 60; 
             let isTimerRunning = false;
             
             // Cek local storage untuk sisa waktu
@@ -481,8 +491,19 @@
                 document.getElementById('btnPrev').disabled = (index === 0);
                 document.getElementById('btnPrev').classList.toggle('btn-disabled', index === 0);
                 
-                document.getElementById('btnNext').style.display = (index < soalData.length - 1) ? 'inline-block' : 'none';
-                document.getElementById('btnSelesai').style.display = (index === soalData.length - 1) ? 'inline-block' : 'none';
+                const btnNext = document.getElementById('btnNext');
+                const btnSelesai = document.getElementById('btnSelesai');
+
+                // LOGIKA TOMBOL SELESAI YANG DIPERBAIKI (PASTI MUNCUL)
+                if (index === soalData.length - 1) {
+                    // Jika di soal terakhir
+                    btnNext.style.display = 'none';
+                    btnSelesai.style.display = 'inline-block';
+                } else {
+                    // Jika bukan soal terakhir
+                    btnNext.style.display = 'inline-block';
+                    btnSelesai.style.display = 'none';
+                }
 
                 // 5. Update Status Ragu-Ragu
                 const btnRagu = document.getElementById('btnRagu');
